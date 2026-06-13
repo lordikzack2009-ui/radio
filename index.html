@@ -3,102 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>НАШЕ РАДИО | LIVE</title>
+    <title>BRATSKOE RADIO | LIVE STREAM</title>
     <style>
+        :root {
+            --glow-color: #00ff66;
+            --bg-gradient: linear-gradient(180deg, #0a0a0c 0%, #111115 100%);
+            --panel-bg: rgba(18, 18, 24, 0.65);
+            --accent-red: #ff3b30;
+        }
+
         body {
-            margin: 0; padding: 0;
-            background: linear-gradient(135deg, #0f0f12 0%, #15151a 100%);
-            color: #fff; font-family: 'Segoe UI', Roboto, sans-serif;
-            display: flex; justify-content: center; align-items: center; height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            color: #ffffff;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
         }
-        .player-card {
-            text-align: center; background: rgba(255, 255, 255, 0.02);
-            padding: 40px; border-radius: 30px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px); max-width: 320px; width: 100%;
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 255, 102, 0.08);
+            border-radius: 50%;
+            filter: blur(80px);
+            top: 20%; left: 30%;
+            z-index: 0;
         }
-        .pulse-icon { font-size: 80px; margin-bottom: 15px; animation: pulse 2.5s infinite ease-in-out; }
-        h1 { font-size: 26px; margin: 0 0 5px 0; letter-spacing: 1px; font-weight: 700; }
-        .sub-text { font-size: 13px; color: #a0a0a5; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .status { font-size: 12px; color: #00ff66; margin-bottom: 35px; font-weight: bold; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .status::before { content: ""; width: 8px; height: 8px; background: #00ff66; border-radius: 50%; box-shadow: 0 0 10px #00ff66; }
-        .play-btn {
-            width: 85px; height: 85px; border-radius: 50%; background: #ff3b30; border: none; color: white;
-            font-size: 28px; cursor: pointer; box-shadow: 0 0 25px rgba(255, 59, 48, 0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-flex; justify-content: center; align-items: center;
+
+        .main-card {
+            position: relative;
+            z-index: 1;
+            background: var(--panel-bg);
+            padding: 45px 35px;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 
+                        0 0 40px rgba(0, 255, 102, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            transition: border 0.5s ease;
         }
-        .play-btn:hover { transform: scale(1.08); box-shadow: 0 0 35px rgba(255, 59, 48, 0.6); }
-        .vol-box { margin-top: 35px; display: flex; align-items: center; justify-content: center; gap: 12px; color: #888; }
-        .slider { -webkit-appearance: none; width: 140px; height: 4px; background: #333; border-radius: 2px; outline: none; }
-        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; cursor: pointer; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(255,255,255,0.2)); } 100% { transform: scale(1); } }
+
+        .main-card.playing {
+            border: 1px solid rgba(0, 255, 102, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 
+                        0 0 40px rgba(0, 255, 102, 0.08);
+        }
+
+        .radio-glow-icon {
+            font-size: 85px;
+            margin-bottom: 20px;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+            transition: all 0.5s ease;
+        }
+
+        .playing .radio-glow-icon {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(0, 255, 102, 0.4));
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: linear-gradient(120deg, #ffffff, #a0a0a5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sub-tag {
+            font-size: 13px;
+            color: #707075;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #a0a0a5;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            transition: all 0.4s ease;
+        }
+
+        .playing .live-badge {
+            color: var(--glow-color);
+            background: rgba(0, 255, 102, 0.06);
+            border: 1px solid rgba(0, 255, 102, 0.15);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.05);
+        }
+
+        .live-badge::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: #444;
+            border-radius: 50%;
+            transition: all 0.4s ease;
+        }
+
+        .playing .live-badge::before {
+            background: var(--glow-color);
+            box-shadow: 0 0 10px var(--glow-color);
+            animation: blinker 1.5s infinite linear;
+        }
+
+        .control-wrapper {
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .action-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            border: none;
+            color: #ffffff;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 59, 48, 0.35);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            outline: none;
+        }
+
+        .action-button:hover {
+            transform: scale(1.06);
+            box-shadow: 0 15px 35px rgba(255, 59, 48, 0.5);
+        }
+
+        .playing .action-button {
+            background: #ffffff;
+            color: #0a0a0c;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.25), 
+                        0 0 30px rgba(0, 255, 102, 0.2);
+        }
+
+        .wave-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            height: 30px;
+            margin-bottom: 35px;
+            opacity: 0.2;
+            transition: opacity 0.4s ease;
+        }
+
+        .playing .wave-container {
+            opacity: 1;
+        }
+
+        .wave-bar {
+            width: 3px;
+            height: 6px;
+            background: var(--glow-color);
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+
+        .volume-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.02);
+            padding: 12px 20px;
+            border-radius: 16px;
+            margin-bottom: 35px;
+        }
+
+        .volume-icon {
+            font-size: 16px;
+            color: #606065;
+            user-select: none;
+            width: 20px;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #25252b;
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: var(--glow-color);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 25px;
+        }
+
+        .footer-link {
+            color: #505055;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-link:hover {
+            color: #ffffff;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0.4; }
+        }
+
+        .toast-notify {
+            position: fixed;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            color: #0a0a0c;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .toast-notify.show {
+            bottom: 30px;
+        }
     </style>
 </head>
 <body>
 
-<div class="player-card">
-    <div class="pulse-icon">📻</div>
-    <h1>Братский Эфир</h1>
-    <div class="sub-text">Прямое включение</div>
-    <div class="status">LIVE</div>
+<div class="main-card" id="playerCard">
+    <div class="radio-glow-icon">📻</div>
+    <h1 id="radioTitle">Братский Эфир</h1>
+    <div class="sub-tag">HQ Audio Stream</div>
+    
+    <div class="live-badge" id="liveBadge">OFFLINE</div>
 
-    <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+    <div class="control-wrapper">
+        <button class="action-button" id="playBtn" onclick="handlePlayback()">▶</button>
+    </div>
 
-    <div class="vol-box">
-        <span>🔈</span>
-        <input type="range" class="slider" id="volume" min="0" max="1" step="0.05" value="0.8" oninput="setVolume(this.value)">
-        <span>🔊</span>
+    <div class="wave-container" id="waveBox">
+        <div class="wave-bar" style="animation-delay: 0.1s;"></div>
+        <div class="wave-bar" style="animation-delay: 0.4s;"></div>
+        <div class="wave-bar" style="animation-delay: 0.2s;"></div>
+        <div class="wave-bar" style="animation-delay: 0.6s;"></div>
+        <div class="wave-bar" style="animation-delay: 0.3s;"></div>
+        <div class="wave-bar" style="animation-delay: 0.5s;"></div>
+        <div class="wave-bar" style="animation-delay: 0.1s;"></div>
+    </div>
+
+    <div class="volume-panel">
+        <div class="volume-icon" id="volIcon">🔊</div>
+        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" oninput="updateVolume(this.value)">
+    </div>
+
+    <div class="footer-links">
+        <a href="#" class="footer-link">Стример онлайн</a>
+        <a href="#" class="footer-link" onclick="alert('Связь в TG/ДС!')">Контакты</a>
     </div>
 </div>
 
-<script>
-    // Твоя ссылка на поток радио (дописали /radio в конец)
-    const streamUrl = "https://localto.net";
-    let audioNode, isPlaying = false;
+<div class="toast-notify" id="toast">Подключение...</div>
 
-    async function togglePlay() {
+<script>
+    const streamUrl = "https://localto.net";
+    let audioStream = null;
+    let isPlaying = false;
+    let waveInterval = null;
+
+    async function handlePlayback() {
         const btn = document.getElementById('playBtn');
+        const card = document.getElementById('playerCard');
+        const badge = document.getElementById('liveBadge');
         
         if (!isPlaying) {
             try {
-                btn.innerText = "⏳";
-                
-                // Пробиваем защиту Localtonet с помощью фейкового запроса, который открывает доступ для аудио-тега
-                await fetch(streamUrl, {
-                    headers: { 'localtonet-skip-warning': 'true' }
-                });
-                
-                audioNode = new Audio();
-                audioNode.src = streamUrl;
-                audioNode.crossOrigin = "anonymous";
-                
-                await audioNode.play();
-                
-                btn.innerText = "⏸";
-                btn.style.background = "#fff"; btn.style.color = "#121212";
-                btn.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.4)";
-                isPlaying = true;
-            } catch (e) {
-                alert("Эфир сейчас выключен (ПК стримера оффлайн)");
-                btn.innerText = "▶";
-            }
-        } else {
-            audioNode.pause();
-            audioNode.src = "";
-            audioNode = null;
-            btn.innerText = "▶";
-            btn.style.background = "#ff3b30"; btn.style.color = "#fff";
-            btn.style.boxShadow = "0 0 25px rgba(255, 59, 48, 0.4)";
-            isPlaying = false;
-        }
-    }
-
-    function setVolume(val) {
-        if(audioNode) audioNode.volume = val;
-    }
-</script>
-
-</body>
-</html>
+                showToast("Подключаемся к серверу...");
