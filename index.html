@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>НАШЕ РАДИО | LIVE</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background: linear-gradient(135deg, #0f0f12 0%, #15151a 100%);
+            color: #fff; font-family: 'Segoe UI', Roboto, sans-serif;
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
+        .player-card {
+            text-align: center; background: rgba(255, 255, 255, 0.02);
+            padding: 40px; border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px); max-width: 320px; width: 100%;
+        }
+        .pulse-icon { font-size: 80px; margin-bottom: 15px; animation: pulse 2.5s infinite ease-in-out; }
+        h1 { font-size: 26px; margin: 0 0 5px 0; letter-spacing: 1px; font-weight: 700; }
+        .sub-text { font-size: 13px; color: #a0a0a5; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .status { font-size: 12px; color: #00ff66; margin-bottom: 35px; font-weight: bold; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .status::before { content: ""; width: 8px; height: 8px; background: #00ff66; border-radius: 50%; box-shadow: 0 0 10px #00ff66; }
+        .play-btn {
+            width: 85px; height: 85px; border-radius: 50%; background: #ff3b30; border: none; color: white;
+            font-size: 28px; cursor: pointer; box-shadow: 0 0 25px rgba(255, 59, 48, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex; justify-content: center; align-items: center;
+        }
+        .play-btn:hover { transform: scale(1.08); box-shadow: 0 0 35px rgba(255, 59, 48, 0.6); }
+        .vol-box { margin-top: 35px; display: flex; align-items: center; justify-content: center; gap: 12px; color: #888; }
+        .slider { -webkit-appearance: none; width: 140px; height: 4px; background: #333; border-radius: 2px; outline: none; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; cursor: pointer; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(255,255,255,0.2)); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div class="player-card">
+    <div class="pulse-icon">📻</div>
+    <h1>Братский Эфир</h1>
+    <div class="sub-text">Прямое включение</div>
+    <div class="status">LIVE</div>
+
+    <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+
+    <div class="vol-box">
+        <span>🔈</span>
+        <input type="range" class="slider" id="volume" min="0" max="1" step="0.05" value="0.8" oninput="setVolume(this.value)">
+        <span>🔊</span>
+    </div>
+</div>
+
+<script>
+    // Твоя ссылка на поток радио (дописали /radio в конец)
+    const streamUrl = "https://localto.net";
+    let audioNode, isPlaying = false;
+
+    async function togglePlay() {
+        const btn = document.getElementById('playBtn');
+        
+        if (!isPlaying) {
+            try {
+                btn.innerText = "⏳";
+                
+                // Пробиваем защиту Localtonet с помощью фейкового запроса, который открывает доступ для аудио-тега
+                await fetch(streamUrl, {
+                    headers: { 'localtonet-skip-warning': 'true' }
+                });
+                
+                audioNode = new Audio();
+                audioNode.src = streamUrl;
+                audioNode.crossOrigin = "anonymous";
+                
+                await audioNode.play();
+                
+                btn.innerText = "⏸";
+                btn.style.background = "#fff"; btn.style.color = "#121212";
+                btn.style.boxShadow = "0 0 30px rgba(255, 255, 255, 0.4)";
+                isPlaying = true;
+            } catch (e) {
+                alert("Эфир сейчас выключен (ПК стримера оффлайн)");
+                btn.innerText = "▶";
+            }
+        } else {
+            audioNode.pause();
+            audioNode.src = "";
+            audioNode = null;
+            btn.innerText = "▶";
+            btn.style.background = "#ff3b30"; btn.style.color = "#fff";
+            btn.style.boxShadow = "0 0 25px rgba(255, 59, 48, 0.4)";
+            isPlaying = false;
+        }
+    }
+
+    function setVolume(val) {
+        if(audioNode) audioNode.volume = val;
+    }
+</script>
+
+</body>
+</html>
