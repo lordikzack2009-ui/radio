@@ -8,327 +8,101 @@
         :root {
             --glow-color: #00ff66;
             --bg-gradient: linear-gradient(180deg, #0a0a0c 0%, #111115 100%);
-            --panel-bg: rgba(18, 18, 24, 0.65);
+            --panel-bg: rgba(18, 18, 24, 0.75);
             --accent-red: #ff3b30;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: var(--bg-gradient);
-            color: #ffffff;
+            margin: 0; padding: 0;
+            background: var(--bg-gradient); color: #ffffff;
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow: hidden;
         }
 
         body::before {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: rgba(0, 255, 102, 0.08);
-            border-radius: 50%;
-            filter: blur(80px);
-            top: 20%; left: 30%;
-            z-index: 0;
+            content: ''; position: absolute; width: 300px; height: 300px;
+            background: rgba(0, 255, 102, 0.06); border-radius: 50%;
+            filter: blur(80px); top: 20%; left: 30%; z-index: 0;
         }
 
         .main-card {
-            position: relative;
-            z-index: 1;
-            background: var(--panel-bg);
-            padding: 45px 35px;
-            border-radius: 32px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 
-                        0 0 40px rgba(0, 255, 102, 0.03);
+            position: relative; z-index: 1; background: var(--panel-bg);
+            padding: 40px 30px; border-radius: 28px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            max-width: 380px;
-            width: 100%;
-            text-align: center;
-            box-sizing: border-box;
-            transition: border 0.5s ease;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            max-width: 360px; width: 100%; text-align: center; box-sizing: border-box;
         }
 
-        .main-card.playing {
-            border: 1px solid rgba(0, 255, 102, 0.2);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 
-                        0 0 40px rgba(0, 255, 102, 0.08);
-        }
-
-        .radio-glow-icon {
-            font-size: 85px;
-            margin-bottom: 20px;
-            display: inline-block;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
-            transition: all 0.5s ease;
-        }
-
-        .playing .radio-glow-icon {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 20px rgba(0, 255, 102, 0.4));
-        }
-
+        .radio-glow-icon { font-size: 75px; margin-bottom: 15px; display: inline-block; }
+        
         h1 {
-            font-size: 28px;
-            font-weight: 800;
-            margin: 0 0 8px 0;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            background: linear-gradient(120deg, #ffffff, #a0a0a5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 26px; font-weight: 800; margin: 0 0 5px 0; letter-spacing: 1px;
+            text-transform: uppercase; background: linear-gradient(120deg, #ffffff, #a0a0a5);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .sub-tag {
-            font-size: 13px;
-            color: #707075;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
+        .sub-tag { font-size: 12px; color: #606065; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
 
-        .live-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: #a0a0a5;
-            margin-bottom: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            transition: all 0.4s ease;
-        }
+        .control-wrapper { margin-bottom: 30px; }
 
-        .playing .live-badge {
-            color: var(--glow-color);
-            background: rgba(0, 255, 102, 0.06);
-            border: 1px solid rgba(0, 255, 102, 0.15);
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.05);
-        }
-
-        .live-badge::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            background: #444;
-            border-radius: 50%;
-            transition: all 0.4s ease;
-        }
-
-        .playing .live-badge::before {
-            background: var(--glow-color);
-            box-shadow: 0 0 10px var(--glow-color);
-            animation: blinker 1.5s infinite linear;
-        }
-
-        .control-wrapper {
-            margin-bottom: 40px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .action-button {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: var(--accent-red);
-            border: none;
-            color: #ffffff;
-            font-size: 32px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(255, 59, 48, 0.35);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            outline: none;
-        }
-
-        .action-button:hover {
-            transform: scale(1.06);
-            box-shadow: 0 15px 35px rgba(255, 59, 48, 0.5);
-        }
-
-        .playing .action-button {
-            background: #ffffff;
-            color: #0a0a0c;
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.25), 
-                        0 0 30px rgba(0, 255, 102, 0.2);
-        }
-
-        .wave-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-            height: 30px;
-            margin-bottom: 35px;
-            opacity: 0.2;
-            transition: opacity 0.4s ease;
-        }
-
-        .playing .wave-container {
-            opacity: 1;
-        }
-
-        .wave-bar {
-            width: 3px;
-            height: 6px;
-            background: var(--glow-color);
-            border-radius: 2px;
-            transition: height 0.1s ease;
-        }
-
-        .volume-panel {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            background: rgba(255,255,255,0.02);
-            padding: 12px 20px;
-            border-radius: 16px;
-            margin-bottom: 35px;
-        }
-
-        .volume-icon {
-            font-size: 16px;
-            color: #606065;
-            user-select: none;
-            width: 20px;
-        }
-
-        .volume-slider {
-            -webkit-appearance: none;
+        /* Встроенный HTML5 плеер, который браузер не сможет заблокировать */
+        audio {
             width: 100%;
-            height: 4px;
-            background: #25252b;
-            border-radius: 2px;
             outline: none;
+            filter: invert(1) hue-rotate(180deg) cubic-bezier(0.1, 1, 0.1, 1); /* Делает плеер стильно темным */
+            border-radius: 12px;
         }
 
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            transition: transform 0.2s ease, background 0.2s ease;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        .warning-box {
+            background: rgba(255, 59, 48, 0.08);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            border-radius: 16px; padding: 15px; margin-bottom: 25px; text-align: left;
         }
 
-        .volume-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            background: var(--glow-color);
+        .warning-box p { margin: 0 0 10px 0; font-size: 12px; color: #ff8882; line-height: 1.4; }
+
+        .btn-bypass {
+            display: block; text-align: center; background: var(--accent-red);
+            color: #fff; text-decoration: none; font-size: 11px; font-weight: 700;
+            padding: 8px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px;
+            transition: background 0.2s;
         }
+        .btn-bypass:hover { background: #d63026; }
 
         .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-            padding-top: 25px;
+            display: flex; justify-content: center; gap: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03); padding-top: 20px;
         }
 
-        .footer-link {
-            color: #505055;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: color 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-link:hover {
-            color: #ffffff;
-        }
-
-        @keyframes blinker {
-            50% { opacity: 0.4; }
-        }
-
-        .toast-notify {
-            position: fixed;
-            bottom: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffffff;
-            color: #0a0a0c;
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 700;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 100;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
-        .toast-notify.show {
-            bottom: 30px;
-        }
+        .footer-link { color: #404045; text-decoration: none; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .footer-link:hover { color: #fff; }
     </style>
 </head>
 <body>
 
-<div class="main-card" id="playerCard">
+<div class="main-card">
     <div class="radio-glow-icon">📻</div>
-    <h1 id="radioTitle">Братский Эфир</h1>
-    <div class="sub-tag">HQ Audio Stream</div>
+    <h1>Братский Эфир</h1>
+    <div class="sub-tag">HQ LIVE STREAM</div>
     
-    <div class="live-badge" id="liveBadge">OFFLINE</div>
+    <!-- КРИТИЧЕСКИЙ БЛОК: Инструкция для пацанов -->
+    <div class="warning-box">
+        <p>⚠️ <b>Внимание:</b> Если звук не играет, нужно один раз убрать блокировку бесплатного тарифа. Нажми кнопку ниже, нажми "Proceed" и вернись назад.</p>
+        <a href="https://localto.net" target="_blank" class="btn-bypass">1. Снять блок (Жми сюда)</a>
+    </div>
 
+    <!-- Железный плеер браузера (без скриптов, работает всегда) -->
     <div class="control-wrapper">
-        <button class="action-button" id="playBtn" onclick="handlePlayback()">▶</button>
-    </div>
-
-    <div class="wave-container" id="waveBox">
-        <div class="wave-bar" style="animation-delay: 0.1s;"></div>
-        <div class="wave-bar" style="animation-delay: 0.4s;"></div>
-        <div class="wave-bar" style="animation-delay: 0.2s;"></div>
-        <div class="wave-bar" style="animation-delay: 0.6s;"></div>
-        <div class="wave-bar" style="animation-delay: 0.3s;"></div>
-        <div class="wave-bar" style="animation-delay: 0.5s;"></div>
-        <div class="wave-bar" style="animation-delay: 0.1s;"></div>
-    </div>
-
-    <div class="volume-panel">
-        <div class="volume-icon" id="volIcon">🔊</div>
-        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" oninput="updateVolume(this.value)">
+        <audio controls preloaded="none" src="https://localto.net"></audio>
     </div>
 
     <div class="footer-links">
-        <a href="#" class="footer-link">Стример онлайн</a>
+        <a href="#" class="footer-link">Прямой эфир</a>
         <a href="#" class="footer-link" onclick="alert('Связь в TG/ДС!')">Контакты</a>
     </div>
 </div>
 
-<div class="toast-notify" id="toast">Подключение...</div>
-
-<script>
-    const streamUrl = "https://localto.net";
-    let audioStream = null;
-    let isPlaying = false;
-    let waveInterval = null;
-
-    async function handlePlayback() {
-        const btn = document.getElementById('playBtn');
-        const card = document.getElementById('playerCard');
-        const badge = document.getElementById('liveBadge');
-        
-        if (!isPlaying) {
-            try {
-                showToast("Подключаемся к серверу...");
+</body>
+</html>
